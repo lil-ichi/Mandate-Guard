@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+pyjwt[crypto]
+cryptography
+mcp>=2

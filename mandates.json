@@ -1,0 +1,15 @@
+{
+  "demo-agent": {
+    "agent_id": "demo-agent",
+    "daily_cap": 2000.0,
+    "monthly_cap": 5000.0,
+    "currency": "USD",
+    "vendor_allowlist": [
+      "acme-cloud",
+      "data-provider"
+    ],
+    "human_approval_above": 500.0,
+    "spent_today": 315.0,
+    "spent_month": 315.0
+  }
+}
