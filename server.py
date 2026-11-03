@@ -102,18 +102,23 @@ def _mcp_call(tool: str, args: dict):
     import asyncio
     import json
 
+    import httpx2
     from mcp import ClientSession
     from mcp.client.streamable_http import streamable_http_client
 
     async def _run():
-        async with streamable_http_client(MCP_URL) as (r, w):
-            async with ClientSession(r, w) as s:
-                await s.initialize()
-                if tool == "__list__":
-                    tools = await s.list_tools()
-                    return [t.name for t in tools.tools]
-                res = await s.call_tool(tool, args)
-                return json.loads(res.content[0].text)
+        # trust_env=False: localhost must never go through a system proxy.
+        async with httpx2.AsyncClient(trust_env=False) as client:
+            async with streamable_http_client(
+                MCP_URL, http_client=client
+            ) as (r, w):
+                async with ClientSession(r, w) as s:
+                    await s.initialize()
+                    if tool == "__list__":
+                        tools = await s.list_tools()
+                        return [t.name for t in tools.tools]
+                    res = await s.call_tool(tool, args)
+                    return json.loads(res.content[0].text)
 
     return asyncio.run(_run())
 

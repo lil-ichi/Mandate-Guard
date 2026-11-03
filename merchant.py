@@ -25,6 +25,7 @@ import jwt
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 BASE = os.path.dirname(__file__)
@@ -32,6 +33,15 @@ CHARGES_PATH = os.path.join(BASE, "charges.jsonl")
 GUARD_URL = os.environ.get("GUARD_URL", "http://127.0.0.1:8123")
 
 app = FastAPI(title="demo-merchant", version="0.1.0")
+
+# Local demo page (served from the guard on :8123) calls this merchant
+# cross-origin in the browser — allow it.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _jwks_cache: dict = {"at": 0.0, "keys": []}
 
