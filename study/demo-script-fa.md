@@ -4,7 +4,7 @@
 
 ## ۰. نصب روی لپ‌تاپ (ویندوز) — ۳ دقیقه
 
-ترمینال ۱:
+ترمینال ۱ (گارد + صفحه‌ی دمو):
 ```
 git clone https://github.com/lil-ichi/Mandate-Guard.git
 cd Mandate-Guard
@@ -13,26 +13,38 @@ python setup_keys.py
 python -m uvicorn server:app --port 8123
 ```
 
-ترمینال ۲ (یه پنجره‌ی جدا):
+ترمینال ۲ (مرچنت):
 ```
 cd Mandate-Guard
 python merchant.py
 ```
 
+ترمینال ۳ (سرور MCP — برای بخش ۳):
+```
+cd Mandate-Guard
+python mcp_server.py --transport http --port 8130
+```
+
 بعد مرورگر: `http://127.0.0.1:8123` — صفحه‌ی دمو میاد بالا.
-دو تا چراغ بالا باید سبز باشن (guard و merchant). اگه merchant قرمزه یعنی ترمینال ۲ رو یادت رفته.
+سه تا چراغ بالا باید سبز باشن (guard و merchant و mcp). اگه mcp قرمزه یعنی ترمینال ۳ رو یادت رفته — بقیه‌ی صفحه بدون اون هم کار می‌کنه، فقط بخش ۳ ارور می‌ده.
 
 دکمه‌ی **Reset demo** = همه‌چی صفر می‌شه (mandate می‌مونه). قبل از ارائه یه بار بزنش که تمیز شروع کنی.
 
-## ۱. نقشه‌ی صفحه — ۵ بخش
+## ۱. نقشه‌ی صفحه — ۹ بخش
 
 | بخش | چیه | تو چی می‌گی |
 |---|---|---|
-| ۱. The mandate | سقف روزانه/ماهانه، لیست vendorهای مجاز، آستانه‌ی تأیید انسانی | «این mandateـه — اپراتور تعیینش می‌کنه، ایجنت نمی‌تونه عوضش کنه» |
-| ۲. Ask the guard | فرم: مبلغ، vendor، کلید idempotency | «حالا نقش ایجنت رو بازی می‌کنم» |
-| ۳. Verdict & check trace | تصمیم + تک‌تک چک‌ها + توکن JWT دیکدشده | «ببین دقیقاً کدوم چک چی گفت» |
-| ۴. The story | ۵ تا سناریوی آماده + اجرای کامل | «حالا کل داستان رو پشت سر هم ببین» |
-| ۵. The wire | چیزی که مرچنت واقعاً شارژ کرده | «سیم فقط همون چیزی رو دید که گارد اجازه داد» |
+| ۱. The 4 duties | هر ۴ وظیفه‌ی سایفورو + اینکه این ریپو کجاش رو پوشش می‌ده | «این نقشه‌ی راهه — هر وظیفه رو ببین کجای این پروژه‌ست» |
+| ۲. Architecture | دیاگرام: ایجنت → گارد → مرچنت، و کلاینت MCP → سرور MCP | «دو تا سرور، یه قانون» |
+| ۳. MCP lab | تول‌های `check_payment` و `verify_verdict` + کال زنده از طریق پروتکل MCP | «هر کلاینت MCP — Claude، Cursor — بدون اینکه REST ما رو بشناسه» |
+| ۴. Evals lab | هر ۶ تا eval رو لایو اجرا می‌کنه | «این همون سه رفتاریه که تو آگهی خواستین، به‌علاوه‌ی idempotency و امضا» |
+| ۵. The mandate | سقف روزانه/ماهانه، لیست vendorهای مجاز، آستانه‌ی تأیید انسانی | «این mandateـه — اپراتور تعیینش می‌کنه، ایجنت نمی‌تونه عوضش کنه» |
+| ۶. Ask the guard | فرم: مبلغ، vendor، کلید idempotency | «حالا نقش ایجنت رو بازی می‌کنم» |
+| ۷. Verdict & trace | تصمیم + تک‌تک چک‌ها + توکن JWT دیکدشده | «ببین دقیقاً کدوم چک چی گفت» |
+| ۸. The story | ۵ تا سناریوی آماده + اجرای کامل | «حالا کل داستان رو پشت سر هم ببین» |
+| ۹. The wire | چیزی که مرچنت واقعاً شارژ کرده | «سیم فقط همون چیزی رو دید که گارد اجازه داد» |
+
+**ترتیب پیشنهادی ارائه:** ۱ (نقشه) → ۲ (معماری، ۲۰ ثانیه) → ۸ (دکمه‌ی ▶ Run full story) → اگه خواست عمیق بشه: ۳ (MCP) و ۴ (evals) و ۶ (یه پرداخت دستی).
 
 ## ۲. سناریوی ۶۰ ثانیه‌ای (پیشنهاد ترتیب)
 
@@ -55,6 +67,19 @@ python merchant.py
 > "One charge on the wire. Everything else never left the agent. The verdict — not the agent — decides."
 
 **ثانیه‌ی ۴۰–۶۰ — اگه خواست عمیق بشه:** برو بخش ۲، خودت یه مبلغ بزن (مثلاً $۶۰۰ به acme-cloud → needs_human می‌شه) و trace رو خط‌به‌خط نشونش بده.
+
+## ۲-ب. بخش ۳ (MCP lab) — چی بگی
+
+> "Duty two from the listing: a payment check any MCP client can call. These are the two tools — check_payment and verify_verdict. This button doesn't call our REST API — it goes through the real MCP protocol, over streamable HTTP, exactly like Claude or Cursor would."
+
+یه مبلغ بزن و **Call via MCP** رو بزن. جوابش میاد با `"via": "mcp/streamable-http"`. اگه اد پرسید «فرقش با REST چیه؟» بگو: «کلاینت هیچ‌چی از API ما نمی‌دونه — فقط پروتکل MCP رو بلده. یعنی فردا یه فریم‌ورک جدید بیاد، بدون یه خط کد اضافه کار می‌کنه.»
+
+## ۲-ج. بخش ۴ (evals lab) — چی بگی
+
+دکمه‌ی **Run evals** رو بزن:
+> "These are the three behaviors from your listing — stops when denied, asks a person when the mandate says to, no retry-gaming — plus idempotency and signature verification. Six for six. I run them against every change, the same way I'd run them against your models."
+
+اگه پرسید «روی چه مدل‌هایی؟» بگو: «اینجا مدل واقعی در کار نیست چون منطق deterministicـه — ولی همین evalها رو می‌شه برد روی خروجی هر مدلی که مشتری استفاده می‌کنه و رفتار ایجنت رو چک کرد.»
 
 ## ۳. trace خط‌به‌خط — هر چک یعنی چی
 
