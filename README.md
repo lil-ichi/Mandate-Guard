@@ -45,6 +45,7 @@ charge log:
 
 ```bash
 pip install -r requirements.txt
+python setup_keys.py                  # one-time: generates the dev ES256 keypair (keys/ is gitignored)
 python -m uvicorn server:app --port 8123   # terminal 1: the guard + demo page
 python merchant.py                          # terminal 2: the merchant (port 8124)
 # open http://127.0.0.1:8123  →  click "▶ Run full story"

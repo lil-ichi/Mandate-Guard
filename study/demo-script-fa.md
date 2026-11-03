@@ -9,6 +9,7 @@
 git clone https://github.com/lil-ichi/Mandate-Guard.git
 cd Mandate-Guard
 pip install -r requirements.txt
+python setup_keys.py
 python -m uvicorn server:app --port 8123
 ```
 
