@@ -38,16 +38,23 @@ and every decision written to an append-only JSONL log.
 
 ## Live demo GUI
 
-The fastest way to see it — an interactive page with the mandate, a
-"propose a payment" form, the step-by-step check trace for every verdict,
-five scripted scenarios (including the tamper test), and the merchant's
-charge log:
+One command starts everything — guard, merchant, MCP server — and opens the
+interactive demo page at `http://127.0.0.1:8123`:
+
+- **Windows:** double-click `start.bat` (stop with `stop.bat`)
+- **macOS/Linux:** `bash start.sh` (stop with `bash stop.sh`)
+
+The script installs requirements if missing and generates the dev ES256
+keypair on first run (`keys/` is gitignored).
+
+Manual start (three terminals), if you prefer:
 
 ```bash
 pip install -r requirements.txt
 python setup_keys.py                  # one-time: generates the dev ES256 keypair (keys/ is gitignored)
-python -m uvicorn server:app --port 8123   # terminal 1: the guard + demo page
-python merchant.py                          # terminal 2: the merchant (port 8124)
+python -m uvicorn server:app --port 8123        # terminal 1: guard + demo page
+python merchant.py                               # terminal 2: merchant (port 8124)
+python mcp_server.py --transport http --port 8130  # terminal 3: MCP server
 # open http://127.0.0.1:8123  →  click "▶ Run full story"
 ```
 
