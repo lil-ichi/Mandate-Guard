@@ -25,6 +25,8 @@
   button.primary:hover{background:#243a63}
   button.danger{border-color:#5a2b2b}
   button:disabled{opacity:.45;cursor:default}
+  .strip{margin-top:14px;font-size:13px;color:var(--dim);border:1px solid var(--line);border-radius:10px;padding:10px 16px;background:var(--panel)}
+  .strip b{color:var(--txt)} .strip code{font-family:var(--mono);font-size:12px;color:#9fb3d1}
   section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-top:18px}
   section h2{margin:0 0 4px;font-size:16px}
   section p.sub{margin:0 0 14px;color:var(--dim);font-size:13.5px}
@@ -41,14 +43,13 @@
   label{display:block;font-size:13px;color:var(--dim);margin:10px 0 4px}
   input{width:100%;background:#0a0d13;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 11px;font-size:14px;font-family:var(--mono)}
   input:focus{outline:none;border-color:var(--blue)}
-  .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
   .badge{display:inline-block;font-weight:700;font-size:13px;border-radius:8px;padding:4px 12px;letter-spacing:.02em}
   .b-allowed{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.5)}
   .b-denied{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.5)}
   .b-needs_human{background:rgba(210,153,34,.13);color:var(--amber);border:1px solid rgba(210,153,34,.5)}
   .b-pass{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.5)}
   .b-fail{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.5)}
-  .b-built{background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.45)}
   .reason{color:var(--dim);font-size:13.5px;margin:8px 0 0;font-family:var(--mono)}
   .trace{margin:14px 0 0;padding:0;list-style:none}
   .trace li{display:flex;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#0d1119;font-size:13.5px;align-items:baseline}
@@ -73,33 +74,12 @@
   .hint{font-size:12.5px;color:var(--dim);margin-top:10px}
   footer{color:var(--dim);font-size:12.5px;margin-top:26px;text-align:center}
   footer a{color:var(--blue)}
-  /* duties */
-  .duties{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-  .duty{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px}
-  .duty .num{font-family:var(--mono);font-size:12px;color:var(--dim)}
-  .duty h3{margin:4px 0 6px;font-size:14.5px}
-  .duty blockquote{margin:0 0 8px;padding:6px 10px;border-left:3px solid var(--blue);color:var(--dim);font-size:12.5px;font-style:italic;background:#0d1119;border-radius:0 6px 6px 0}
-  .duty .maps{font-size:13px;margin:0 0 8px}
-  .duty .maps code{font-family:var(--mono);font-size:12px;color:#9fb3d1}
-  .duty a{color:var(--blue);font-size:12.5px;text-decoration:none}
-  /* architecture */
-  .arch{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-  .archrow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
-  .abox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:150px;flex:1}
-  .abox b{display:block;font-size:13.5px}
-  .abox span{font-size:12px;color:var(--dim);font-family:var(--mono)}
-  .abox.hi{border-color:#2f4d8f;background:#141c30}
-  .arr{align-self:center;color:var(--dim);font-size:20px;flex:none}
-  .arr small{display:block;font-size:10.5px;font-family:var(--mono);text-align:center}
-  /* evals */
-  .evalrow{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#0d1119;font-size:13.5px}
-  .evalrow .en{font-family:var(--mono);font-weight:700;width:34px;flex:none}
-  .evalrow .ed{color:var(--dim);font-size:12.5px;font-family:var(--mono)}
-  pre.json{background:#07090d;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px;overflow:auto;max-height:280px;color:#9fb3d1}
-  table.tools{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
-  table.tools th,table.tools td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
-  table.tools th{color:var(--dim);font-weight:600;background:#0d1119}
-  table.tools td code{font-family:var(--mono);font-size:12.5px;color:#9fb3d1}
+  .evalrow{display:flex;gap:10px;align-items:baseline;padding:7px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#0d1119;font-size:13px}
+  .evalrow .en{font-family:var(--mono);font-weight:700;flex:none}
+  pre.json{background:#07090d;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px;overflow:auto;max-height:220px;color:#9fb3d1;margin:10px 0 0}
+  .minicard h3{margin:0 0 4px;font-size:14.5px}
+  .minicard p{margin:0 0 8px;color:var(--dim);font-size:13px}
+  .minicard code{font-family:var(--mono);font-size:12px;color:#9fb3d1}
 </style>
 </head>
 <body>
@@ -108,104 +88,21 @@
 <header>
   <h1>mandate-guard <span>· the agent proposes, the mandate decides</span></h1>
   <div class="dots">
-    <span><i class="dot" id="dot-guard"></i>guard :8123</span>
-    <span><i class="dot" id="dot-merch"></i>merchant :8124</span>
-    <span><i class="dot" id="dot-mcp"></i>mcp :8130</span>
+    <span><i class="dot" id="dot-guard"></i>guard</span>
+    <span><i class="dot" id="dot-merch"></i>merchant</span>
+    <span><i class="dot" id="dot-mcp"></i>mcp</span>
     <button class="danger" id="btn-reset" title="Clear spend + decisions (mandates stay)">Reset demo</button>
   </div>
 </header>
 
-<!-- 1 · DUTIES -->
-<section id="s-duties">
-  <h2>1 · The 4 duties — where this repo covers them</h2>
-  <p class="sub">The role's four workstreams, each mapped to what mandate-guard implements today.</p>
-  <div class="duties">
-    <div class="duty">
-      <div class="num">DUTY 1</div><h3>Framework integrations</h3>
-      <blockquote>"Packages for the OpenAI Agents SDK, LangChain and the Vercel AI SDK."</blockquote>
-      <p class="maps">This repo: <code>guard.authorize()</code> — the single framework-agnostic function each package wraps. One policy core, N thin adapters.</p>
-      <span class="badge b-built">core built · packages = the role</span><br><a href="#s-ask">↓ see it run</a>
-    </div>
-    <div class="duty">
-      <div class="num">DUTY 2</div><h3>MCP server</h3>
-      <blockquote>"A payment check any MCP client can call."</blockquote>
-      <p class="maps">This repo: <code>mcp_server.py</code> — tools <code>check_payment</code> + <code>verify_verdict</code>, over stdio and streamable HTTP.</p>
-      <span class="badge b-pass">✓ built &amp; tested</span><br><a href="#s-mcp">↓ try it live</a>
-    </div>
-    <div class="duty">
-      <div class="num">DUTY 3</div><h3>Evals</h3>
-      <blockquote>"Stops when denied, asks a person when the mandate says to, no retry-gaming."</blockquote>
-      <p class="maps">This repo: <code>evals.py</code> — the listing's three behaviors plus idempotency and signature checks. Run them below.</p>
-      <span class="badge b-pass">✓ 6/6 passing</span><br><a href="#s-evals">↓ run them</a>
-    </div>
-    <div class="duty">
-      <div class="num">DUTY 4</div><h3>Public-SDK learnings</h3>
-      <blockquote>"What you learn from the integrations will shape them."</blockquote>
-      <p class="maps">Learned building this: cheapest, most-decisive checks first; deny reasons as machine-readable codes; idempotency as a first-class citizen; the merchant — not the agent — is the trust boundary.</p>
-      <span class="badge b-built">design notes</span>
-    </div>
-  </div>
-</section>
+<div class="strip">
+  Covers the role's 4 duties: <b>framework core</b> <code>guard.authorize()</code> ·
+  <b>MCP server</b> <code>check_payment</code> / <code>verify_verdict</code> ·
+  <b>evals</b> 6/6 live below · <b>SDK learnings</b>: cheapest checks first, deny codes, idempotency first-class
+</div>
 
-<!-- 2 · ARCHITECTURE -->
-<section id="s-arch">
-  <h2>2 · Architecture</h2>
-  <p class="sub">Two servers, one rule: the verdict — not the agent — decides what hits the wire.</p>
-  <div class="arch">
-    <div class="archrow">
-      <div class="abox"><b>Agent</b><span>any LLM / framework</span></div>
-      <div class="arr">→<small>POST /v1/check</small></div>
-      <div class="abox hi"><b>Guard :8123</b><span>mandate checks → SQLite<br>ES256 verdict (5-min TTL)</span></div>
-      <div class="arr">→<small>signed JWT</small></div>
-      <div class="abox"><b>Merchant :8124</b><span>JWKS → verify sig + claims<br>charge / 402</span></div>
-    </div>
-    <div class="archrow">
-      <div class="abox"><b>MCP client</b><span>Claude / Cursor / any</span></div>
-      <div class="arr">→<small>MCP</small></div>
-      <div class="abox hi"><b>MCP server :8130</b><span>check_payment<br>verify_verdict</span></div>
-      <div class="arr">→<small>stdio / streamable-http</small></div>
-      <div class="abox"><b>Your system</b><span>pays with its own rails;<br>guard never moves money</span></div>
-    </div>
-  </div>
-  <p class="hint">Trust boundary: the merchant verifies the signature and the claims itself — even a lying agent can't get past it (§7, scenario ⑤).</p>
-</section>
-
-<!-- 3 · MCP LAB -->
-<section id="s-mcp">
-  <h2>3 · MCP lab — the payment check as a tool</h2>
-  <p class="sub">Any MCP client finds Saifuro-style tools here. This form calls the <b>real MCP server</b> over streamable HTTP — not the REST API.</p>
-  <table class="tools">
-    <tr><th>tool</th><th>input</th><th>returns</th></tr>
-    <tr><td><code>check_payment</code></td><td><code>agent_id, amount, currency, vendor, purpose?, idempotency_key?</code></td><td><code>decision, reason, verdict (JWT), decision_id</code></td></tr>
-    <tr><td><code>verify_verdict</code></td><td><code>verdict</code></td><td><code>valid, claims | error</code></td></tr>
-  </table>
-  <div class="grid2" style="margin-top:12px">
-    <div>
-      <label>Amount (USD)</label><input id="m-amount" type="number" value="45" min="0" step="0.01">
-      <label>Vendor</label><input id="m-vendor" value="acme-cloud">
-      <div class="row"><button class="primary" id="btn-mcp">Call via MCP →</button></div>
-      <p class="hint" id="mcp-hint">Requires: <code style="font-family:var(--mono)">python mcp_server.py --transport http --port 8130</code> in a third terminal.</p>
-    </div>
-    <div>
-      <label>MCP tool response</label>
-      <div id="mcp-empty" class="empty">No MCP call yet.</div>
-      <pre class="json" id="mcp-out" style="display:none"></pre>
-    </div>
-  </div>
-</section>
-
-<!-- 4 · EVALS LAB -->
-<section id="s-evals">
-  <h2>4 · Evals lab — the behaviors the listing demands</h2>
-  <p class="sub">Runs the full suite live (resets demo spend first, like CI). The first three are the listing's cases verbatim.</p>
-  <div class="row" style="margin-top:0"><button class="primary" id="btn-evals">Run evals →</button><span class="badge b-pass" id="eval-summary" style="display:none"></span></div>
-  <div id="evals-empty" class="empty">No run yet.</div>
-  <div id="evals-out" style="margin-top:10px"></div>
-</section>
-
-<!-- 5 · MANDATE -->
-<section id="s-mandate">
-  <h2>5 · The mandate</h2>
+<section>
+  <h2>The mandate</h2>
   <p class="sub">What the operator allows <b>demo-agent</b> to do. The guard enforces this — the agent cannot change it.</p>
   <div class="cards">
     <div class="card"><div class="k">Daily spend</div><div class="v" id="m-daily">$0 / $2,000</div><div class="bar"><i id="bar-daily" style="width:0%"></i></div></div>
@@ -216,10 +113,9 @@
 </section>
 
 <div class="grid2">
-<!-- 6 · ASK -->
-<section id="s-ask">
-  <h2>6 · Ask the guard</h2>
-  <p class="sub">Play the agent: propose a payment and watch every policy check run. This is the core duty-1 logic.</p>
+<section>
+  <h2>Ask the guard</h2>
+  <p class="sub">Play the agent: propose a payment and watch every policy check run.</p>
   <label>Amount (USD)</label><input id="f-amount" type="number" value="120" min="0" step="0.01">
   <label>Vendor</label><input id="f-vendor" value="acme-cloud">
   <label>Purpose</label><input id="f-purpose" value="gpu-hours">
@@ -231,9 +127,8 @@
   <p class="hint">Same key twice = the previous decision is replayed, never double-authorized.</p>
 </section>
 
-<!-- VERDICT -->
 <section>
-  <h2>7 · Verdict &amp; check trace</h2>
+  <h2>Verdict &amp; check trace</h2>
   <p class="sub">The signed verdict (ES256 JWT) plus the exact checks that produced it.</p>
   <div id="verdict-empty" class="empty">No verdict yet — authorize a payment on the left.</div>
   <div id="verdict-box" style="display:none">
@@ -246,9 +141,8 @@
 </section>
 </div>
 
-<!-- 8 · STORY -->
-<section id="s-story">
-  <h2>8 · The story — five spends, one wire</h2>
+<section>
+  <h2>The story — five spends, one wire</h2>
   <p class="sub">The scripted demo: an agent tries five payments. Only allowed verdicts ever reach the merchant.</p>
   <div class="scen">
     <button data-s="0">① $120 → acme-cloud</button>
@@ -261,9 +155,8 @@
   <div class="feed" id="feed"><div class="ln dim">— narration appears here —</div></div>
 </section>
 
-<!-- 9 · WIRE -->
-<section id="s-wire">
-  <h2>9 · The wire — what the merchant actually charged</h2>
+<section>
+  <h2>The wire — what the merchant actually charged</h2>
   <p class="sub">The merchant verifies the signature and the claims itself. Anything else → 402, nothing charged.</p>
   <div id="wire-empty" class="empty">Nothing has hit the wire yet.</div>
   <table class="wire" id="wire-table" style="display:none">
@@ -272,6 +165,27 @@
   </table>
   <div class="row"><button id="btn-wire">↻ refresh</button></div>
 </section>
+
+<div class="grid2">
+<section class="minicard">
+  <h3>MCP server <span class="badge b-pass" id="mcp-badge" style="display:none"></span></h3>
+  <p>Tools <code>check_payment</code> + <code>verify_verdict</code> — any MCP client (Claude, Cursor) can call the payment check without knowing the REST API. This button goes through the <b>real MCP protocol</b>.</p>
+  <div class="row" style="margin-top:0">
+    <input id="m-amount" type="number" value="45" min="0" step="0.01" style="max-width:110px">
+    <input id="m-vendor" value="acme-cloud" style="max-width:170px">
+    <button class="primary" id="btn-mcp">Call via MCP →</button>
+  </div>
+  <pre class="json" id="mcp-out" style="display:none"></pre>
+  <p class="hint">Needs the MCP server: <code>python mcp_server.py --transport http --port 8130</code> (start.bat does it).</p>
+</section>
+
+<section class="minicard">
+  <h3>Evals <span class="badge b-pass" id="eval-summary" style="display:none"></span></h3>
+  <p>The listing's three behaviors — stops when denied, asks a person when the mandate says to, no retry-gaming — plus idempotency and signature checks. Run live:</p>
+  <div class="row" style="margin-top:0"><button class="primary" id="btn-evals">Run evals →</button></div>
+  <div id="evals-out" style="margin-top:10px"><div class="empty">No run yet.</div></div>
+</section>
+</div>
 
 <footer>mandate-guard · the verdict — not the agent — decides what hits the wire ·
 <a href="https://github.com/lil-ichi/Mandate-Guard" target="_blank" rel="noopener">github.com/lil-ichi/Mandate-Guard</a></footer>
@@ -388,12 +302,11 @@ async function askGuard(){
   btn.disabled = false;
 }
 
-/* ---------- MCP lab ---------- */
 async function mcpCheck(){
   const btn = document.getElementById('btn-mcp');
   const out = document.getElementById('mcp-out');
+  const badge = document.getElementById('mcp-badge');
   btn.disabled = true;
-  document.getElementById('mcp-empty').style.display = 'none';
   out.style.display = 'block';
   out.textContent = 'calling check_payment over MCP…';
   try{
@@ -407,38 +320,38 @@ async function mcpCheck(){
         idempotency_key: newKey()
       })});
     out.textContent = JSON.stringify(r, null, 2);
+    badge.style.display = 'inline-block';
+    badge.className = 'badge b-' + r.result.decision;
+    badge.textContent = r.result.decision.toUpperCase().replace('_',' ');
     refreshMandate();
   }catch(e){
     out.textContent = 'ERROR: ' + e.message;
+    badge.style.display = 'none';
   }
   btn.disabled = false;
 }
 
-/* ---------- evals lab ---------- */
 async function runEvals(){
   const btn = document.getElementById('btn-evals');
   const box = document.getElementById('evals-out');
   const sum = document.getElementById('eval-summary');
   btn.disabled = true;
-  document.getElementById('evals-empty').style.display = 'none';
   box.innerHTML = '<div class="empty">running…</div>';
   sum.style.display = 'none';
   try{
     const r = await gjson('/v1/demo/evals', {method:'POST'});
     sum.style.display = 'inline-block';
     sum.className = 'badge ' + (r.passed === r.total ? 'b-pass' : 'b-fail');
-    sum.textContent = r.passed + '/' + r.total + ' passing';
+    sum.textContent = r.passed + '/' + r.total;
     box.innerHTML = r.results.map((e, i) =>
-      '<div class="evalrow"><span class="en">E' + (i+1) + '</span>' +
-      '<span class="badge ' + (e.passed ? 'b-pass' : 'b-fail') + '">' + (e.passed ? 'PASS' : 'FAIL') + '</span>' +
-      '<span><b>' + e.name.replace(/^E\d+ /, '') + '</b><br><span class="ed">' + e.detail + '</span></span></div>'
+      '<div class="evalrow"><span class="badge ' + (e.passed ? 'b-pass' : 'b-fail') + '">' + (e.passed ? 'PASS' : 'FAIL') + '</span>' +
+      '<span><b>E' + (i+1) + '</b> ' + e.name.replace(/^E\d+ /, '') + '</span></div>'
     ).join('');
     refreshMandate(); refreshWire();
   }catch(e){ box.innerHTML = '<div class="empty">error: ' + e.message + '</div>'; }
   btn.disabled = false;
 }
 
-/* ---------- scripted story ---------- */
 async function spend(amount, vendor, item, key){
   feed('── agent wants: <b>$'+amount+' → '+vendor+'</b> ('+item+')', 'inf');
   const rec = await gjson('/v1/check', {method:'POST',
