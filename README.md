@@ -36,6 +36,25 @@ Plus: idempotency keys (same key → same decision, never double-authorizes),
 retry-gaming detection (same denied intent with tiny tweaks gets blocked),
 and every decision written to an append-only JSONL log.
 
+## Live demo GUI
+
+The fastest way to see it — an interactive page with the mandate, a
+"propose a payment" form, the step-by-step check trace for every verdict,
+five scripted scenarios (including the tamper test), and the merchant's
+charge log:
+
+```bash
+pip install -r requirements.txt
+python -m uvicorn server:app --port 8123   # terminal 1: the guard + demo page
+python merchant.py                          # terminal 2: the merchant (port 8124)
+# open http://127.0.0.1:8123  →  click "▶ Run full story"
+```
+
+Every `/v1/check` response now also carries a `trace`: the ordered policy
+checks (idempotency → mandate → retry-gaming → currency → allowlist →
+daily/monthly caps → human threshold), each with pass/deny/route/info and a
+detail string. The GUI renders it as a timeline.
+
 ## Quickstart
 
 ```bash

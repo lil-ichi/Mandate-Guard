@@ -138,3 +138,9 @@ def charge(body: ChargeIn):
     with open(CHARGES_PATH, "a") as f:
         f.write(json.dumps(receipt) + "\n")
     return {"charged": True, **receipt}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8124)

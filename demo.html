@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mandate-guard — live demo</title>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#12161f; --panel2:#171c28; --line:#232a3b;
+    --txt:#e6eaf2; --dim:#8b93a7; --green:#3fb950; --red:#f85149;
+    --amber:#d29922; --blue:#58a6ff; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--txt);font:15px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0 16px 64px}
+  .wrap{max-width:1080px;margin:0 auto}
+  header{display:flex;align-items:center;gap:14px;padding:20px 4px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+  header h1{font-size:20px;margin:0;font-weight:650}
+  header h1 span{color:var(--dim);font-weight:400;font-size:14px}
+  .dots{margin-left:auto;display:flex;gap:12px;align-items:center;font-size:13px;color:var(--dim)}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#555;margin-right:5px;vertical-align:1px}
+  .dot.ok{background:var(--green)} .dot.bad{background:var(--red)}
+  button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--txt);border-radius:8px;padding:8px 14px;font-size:14px}
+  button:hover{border-color:var(--blue)}
+  button.primary{background:#1c2b4a;border-color:#2f4d8f}
+  button.primary:hover{background:#243a63}
+  button.danger{border-color:#5a2b2b}
+  button:disabled{opacity:.45;cursor:default}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-top:18px}
+  section h2{margin:0 0 4px;font-size:16px}
+  section p.sub{margin:0 0 14px;color:var(--dim);font-size:13.5px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .card .k{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .card .v{font-size:20px;font-weight:650;margin-top:2px}
+  .bar{height:8px;background:#0a0d13;border-radius:4px;margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--blue);border-radius:4px;transition:width .4s}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{font-family:var(--mono);font-size:12.5px;background:#0a0d13;border:1px solid var(--line);border-radius:20px;padding:3px 11px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
+  label{display:block;font-size:13px;color:var(--dim);margin:10px 0 4px}
+  input{width:100%;background:#0a0d13;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 11px;font-size:14px;font-family:var(--mono)}
+  input:focus{outline:none;border-color:var(--blue)}
+  .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .badge{display:inline-block;font-weight:700;font-size:15px;border-radius:8px;padding:5px 14px;letter-spacing:.02em}
+  .b-allowed{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.5)}
+  .b-denied{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.5)}
+  .b-needs_human{background:rgba(210,153,34,.13);color:var(--amber);border:1px solid rgba(210,153,34,.5)}
+  .reason{color:var(--dim);font-size:13.5px;margin:8px 0 0;font-family:var(--mono)}
+  .trace{margin:14px 0 0;padding:0;list-style:none}
+  .trace li{display:flex;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#0d1119;font-size:13.5px;align-items:baseline}
+  .trace .st{font-weight:700;width:64px;flex:none;font-family:var(--mono);font-size:12px}
+  .st-pass{color:var(--green)} .st-deny{color:var(--red)} .st-route{color:var(--amber)} .st-info{color:var(--blue)}
+  .trace .dt{color:var(--dim);font-family:var(--mono);font-size:12.5px}
+  .trace .tt{font-weight:600}
+  table.claims{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+  table.claims td{border:1px solid var(--line);padding:6px 10px;font-family:var(--mono)}
+  table.claims td:first-child{color:var(--dim);width:150px}
+  details{margin-top:12px}
+  details summary{cursor:pointer;color:var(--dim);font-size:13px}
+  .tokenbox{font-family:var(--mono);font-size:11.5px;word-break:break-all;background:#0a0d13;border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:8px;color:#9fb3d1;max-height:120px;overflow:auto}
+  .feed{background:#07090d;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:13px;min-height:180px;max-height:380px;overflow:auto;white-space:pre-wrap}
+  .feed .ln{margin:2px 0}
+  .feed .ok{color:var(--green)} .feed .no{color:var(--red)} .feed .warn{color:var(--amber)} .feed .inf{color:var(--blue)} .feed .dim{color:var(--dim)}
+  .scen{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  table.wire{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  table.wire th,table.wire td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;font-family:var(--mono);font-size:13px}
+  table.wire th{color:var(--dim);font-weight:600;border-bottom:1px solid var(--line)}
+  .empty{color:var(--dim);font-size:13.5px;padding:10px 0}
+  .hint{font-size:12.5px;color:var(--dim);margin-top:10px}
+  footer{color:var(--dim);font-size:12.5px;margin-top:26px;text-align:center}
+  footer a{color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>mandate-guard <span>· live demo — the agent proposes, the mandate decides</span></h1>
+  <div class="dots">
+    <span><i class="dot" id="dot-guard"></i>guard</span>
+    <span><i class="dot" id="dot-merch"></i>merchant</span>
+    <button class="danger" id="btn-reset" title="Clear spend + decisions (mandates stay)">Reset demo</button>
+  </div>
+</header>
+
+<section>
+  <h2>1 · The mandate</h2>
+  <p class="sub">What the operator allows <b>demo-agent</b> to do. The guard enforces this — the agent cannot change it.</p>
+  <div class="cards">
+    <div class="card"><div class="k">Daily spend</div><div class="v" id="m-daily">$0 / $2,000</div><div class="bar"><i id="bar-daily" style="width:0%"></i></div></div>
+    <div class="card"><div class="k">Monthly spend</div><div class="v" id="m-monthly">$0 / $5,000</div><div class="bar"><i id="bar-monthly" style="width:0%"></i></div></div>
+    <div class="card"><div class="k">Vendor allowlist</div><div class="chips" id="m-vendors"></div></div>
+    <div class="card"><div class="k">Human approval above</div><div class="v" id="m-threshold">$500</div><div class="hint">Currency: <span id="m-cur">USD</span></div></div>
+  </div>
+</section>
+
+<div class="grid2">
+<section>
+  <h2>2 · Ask the guard</h2>
+  <p class="sub">Play the agent: propose a payment and watch every policy check run.</p>
+  <label>Amount (USD)</label><input id="f-amount" type="number" value="120" min="0" step="0.01">
+  <label>Vendor</label><input id="f-vendor" value="acme-cloud">
+  <label>Purpose</label><input id="f-purpose" value="gpu-hours">
+  <label>Idempotency key</label><input id="f-key" value="">
+  <div class="row">
+    <button class="primary" id="btn-ask">Authorize payment →</button>
+    <button id="btn-newkey" title="Generate a fresh idempotency key">↻ new key</button>
+  </div>
+  <p class="hint">Same key twice = the previous decision is replayed, never double-authorized.</p>
+</section>
+
+<section>
+  <h2>3 · Verdict &amp; check trace</h2>
+  <p class="sub">The signed verdict (ES256 JWT) plus the exact checks that produced it.</p>
+  <div id="verdict-empty" class="empty">No verdict yet — authorize a payment on the left.</div>
+  <div id="verdict-box" style="display:none">
+    <span class="badge" id="v-badge">ALLOWED</span>
+    <p class="reason" id="v-reason"></p>
+    <ul class="trace" id="v-trace"></ul>
+    <table class="claims" id="v-claims"></table>
+    <details><summary>raw JWT (what the merchant receives)</summary><div class="tokenbox" id="v-token"></div></details>
+  </div>
+</section>
+</div>
+
+<section>
+  <h2>4 · The story — five spends, one wire</h2>
+  <p class="sub">The scripted demo: an agent tries five payments. Only allowed verdicts ever reach the merchant.</p>
+  <div class="scen">
+    <button data-s="0">① $120 → acme-cloud</button>
+    <button data-s="1">② $50 → evil-vendor</button>
+    <button data-s="2">③ $49.99 → evil-vendor <i>(retry)</i></button>
+    <button data-s="3">④ $900 → acme-cloud <i>(human)</i></button>
+    <button data-s="4">⑤ tamper test</button>
+    <button class="primary" id="btn-runall">▶ Run full story</button>
+  </div>
+  <div class="feed" id="feed"><div class="ln dim">— narration appears here —</div></div>
+</section>
+
+<section>
+  <h2>5 · The wire — what the merchant actually charged</h2>
+  <p class="sub">The merchant verifies the signature and the claims itself. Anything else → 402, nothing charged.</p>
+  <div id="wire-empty" class="empty">Nothing has hit the wire yet.</div>
+  <table class="wire" id="wire-table" style="display:none">
+    <thead><tr><th>receipt</th><th>amount</th><th>vendor</th><th>item</th></tr></thead>
+    <tbody id="wire-body"></tbody>
+  </table>
+  <div class="row"><button id="btn-wire">↻ refresh</button></div>
+</section>
+
+<footer>mandate-guard · the verdict — not the agent — decides what hits the wire ·
+<a href="https://github.com/lil-ichi/Mandate-Guard" target="_blank" rel="noopener">github.com/lil-ichi/Mandate-Guard</a></footer>
+</div>
+
+<script>
+const GUARD = location.origin;
+const MERCHANT = location.protocol + '//' + location.hostname + ':8124';
+const AGENT = 'demo-agent';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function gjson(path, opts){
+  const r = await fetch(GUARD + path, opts);
+  if(!r.ok) throw new Error(path + ' → ' + r.status);
+  return r.json();
+}
+async function mjson(path, opts){
+  const r = await fetch(MERCHANT + path, opts);
+  const body = await r.json().catch(()=>({}));
+  return {status:r.status, body};
+}
+function feed(html, cls){
+  const el = document.getElementById('feed');
+  if(el.querySelector('.dim') && el.textContent.includes('narration appears')) el.innerHTML='';
+  const d = document.createElement('div');
+  d.className = 'ln ' + (cls||'');
+  d.innerHTML = html;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+function b64d(s){
+  s = s.replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length % 4) s += '=';
+  return JSON.parse(atob(s));
+}
+function setDot(id, ok){ document.getElementById(id).className = 'dot ' + (ok?'ok':'bad'); }
+
+async function health(){
+  try{ await gjson('/.well-known/jwks.json'); setDot('dot-guard', true); }
+  catch(e){ setDot('dot-guard', false); }
+  try{ const r = await mjson('/health'); setDot('dot-merch', r.status===200); }
+  catch(e){ setDot('dot-merch', false); }
+}
+
+async function refreshMandate(){
+  try{
+    const m = await gjson('/v1/mandates/' + AGENT);
+    document.getElementById('m-daily').textContent = '$' + m.spent_today + ' / $' + m.daily_cap;
+    document.getElementById('m-monthly').textContent = '$' + m.spent_month + ' / $' + m.monthly_cap;
+    document.getElementById('bar-daily').style.width = Math.min(100, m.spent_today/m.daily_cap*100) + '%';
+    document.getElementById('bar-monthly').style.width = Math.min(100, m.spent_month/m.monthly_cap*100) + '%';
+    document.getElementById('m-vendors').innerHTML = (m.vendor_allowlist||[]).map(v=>'<span class="chip">'+v+'</span>').join('') || '<span class="dim">any</span>';
+    document.getElementById('m-threshold').textContent = '$' + m.human_approval_above;
+    document.getElementById('m-cur').textContent = m.currency;
+  }catch(e){ /* mandate missing */ }
+}
+
+async function refreshWire(){
+  try{
+    const r = await mjson('/charges');
+    const rows = r.body || [];
+    const tbl = document.getElementById('wire-table');
+    document.getElementById('wire-empty').style.display = rows.length ? 'none' : 'block';
+    tbl.style.display = rows.length ? 'table' : 'none';
+    document.getElementById('wire-body').innerHTML = rows.map(c =>
+      '<tr><td>'+String(c.receipt_id).slice(0,8)+'…</td><td>$'+c.amount+' '+c.currency+'</td><td>'+c.vendor+'</td><td>'+(c.item||'')+'</td></tr>'
+    ).join('');
+  }catch(e){ setDot('dot-merch', false); }
+}
+
+function renderVerdict(rec){
+  document.getElementById('verdict-empty').style.display = 'none';
+  const box = document.getElementById('verdict-box');
+  box.style.display = 'block';
+  const b = document.getElementById('v-badge');
+  b.className = 'badge b-' + rec.decision;
+  b.textContent = rec.decision.toUpperCase().replace('_',' ');
+  document.getElementById('v-reason').textContent = 'reason: ' + rec.reason;
+  const icons = {pass:'✓', deny:'✗', route:'⤴', info:'ℹ'};
+  document.getElementById('v-trace').innerHTML = (rec.trace||[]).map(s =>
+    '<li><span class="st st-'+s.status+'">'+icons[s.status]+' '+s.status.toUpperCase()+'</span>' +
+    '<span><span class="tt">'+s.title+'</span><br><span class="dt">'+s.detail+'</span></span></li>'
+  ).join('');
+  let claims = {};
+  try{ claims = b64d(rec.verdict.split('.')[1]); }catch(e){}
+  const order = ['iss','jti','agent_id','amount','currency','vendor','decision','reason','iat','exp'];
+  document.getElementById('v-claims').innerHTML = order.filter(k=>k in claims).map(k =>
+    '<tr><td>'+k+'</td><td>'+claims[k]+'</td></tr>').join('');
+  document.getElementById('v-token').textContent = rec.verdict;
+}
+
+function newKey(){ return 'key-' + Math.random().toString(36).slice(2,8); }
+
+async function askGuard(){
+  const btn = document.getElementById('btn-ask');
+  btn.disabled = true;
+  try{
+    const rec = await gjson('/v1/check', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        agent_id: AGENT,
+        amount: parseFloat(document.getElementById('f-amount').value),
+        currency: 'USD',
+        vendor: document.getElementById('f-vendor').value.trim(),
+        purpose: document.getElementById('f-purpose').value.trim(),
+        idempotency_key: document.getElementById('f-key').value.trim() || null
+      })});
+    renderVerdict(rec);
+    refreshMandate();
+  }catch(e){ alert('guard error: ' + e.message); }
+  btn.disabled = false;
+}
+
+/* ---------- scripted story ---------- */
+async function spend(amount, vendor, item, key){
+  feed('── agent wants: <b>$'+amount+' → '+vendor+'</b> ('+item+')', 'inf');
+  const rec = await gjson('/v1/check', {method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({agent_id:AGENT, amount, currency:'USD', vendor, purpose:item, idempotency_key:key})});
+  const col = rec.decision==='allowed' ? 'ok' : (rec.decision==='needs_human' ? 'warn' : 'no');
+  feed('guard verdict: <b>'+rec.decision.toUpperCase()+'</b> — '+rec.reason, col);
+  renderVerdict(rec);
+  if(rec.decision !== 'allowed'){
+    feed('→ agent does NOT call the merchant. Nothing hits the wire.', 'dim');
+    await refreshMandate();
+    return rec;
+  }
+  const r = await mjson('/charge', {method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({verdict:rec.verdict, amount, vendor, item})});
+  if(r.status===200 && r.body.charged){
+    feed('→ merchant verified the signature + claims and <b>CHARGED</b>. receipt '+String(r.body.receipt_id).slice(0,8)+'…', 'ok');
+  }else{
+    feed('→ merchant REJECTED it ('+r.status+'): '+(r.body.detail||JSON.stringify(r.body)), 'no');
+  }
+  await refreshMandate(); await refreshWire();
+  return rec;
+}
+
+async function tamperTest(){
+  feed('── <b>TAMPER TEST</b>: agent reuses a valid $120 verdict, asks the merchant for $500', 'warn');
+  const rec = await gjson('/v1/check', {method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({agent_id:AGENT, amount:120, currency:'USD', vendor:'acme-cloud', purpose:'gpu-hours', idempotency_key:newKey()})});
+  renderVerdict(rec);
+  const r = await mjson('/charge', {method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({verdict:rec.verdict, amount:500, vendor:'acme-cloud', item:'sneaky-upgrade'})});
+  if(r.status===200){
+    feed('→ merchant CHARGED?! something is very wrong.', 'no');
+  }else{
+    feed('→ merchant: <b>'+r.status+'</b> '+(r.body.detail||''), 'ok');
+    feed('The agent lied. The merchant caught it — the verdict, not the agent, decides.', 'dim');
+  }
+  await refreshWire();
+}
+
+const SCEN = [
+  ()=>spend(120,'acme-cloud','gpu-hours','story-1'),
+  ()=>spend(50,'evil-vendor','totally-legit','story-2'),
+  ()=>spend(49.99,'evil-vendor','totally-legit?','story-3'),
+  ()=>spend(900,'acme-cloud','big-cluster','story-4'),
+  ()=>tamperTest(),
+];
+
+async function runAll(){
+  const btns = document.querySelectorAll('.scen button');
+  btns.forEach(b=>b.disabled=true);
+  document.getElementById('feed').innerHTML='';
+  feed('<b>mandate-guard</b> · the verdict — not the agent — decides what hits the wire', 'dim');
+  await sleep(400);
+  for(const s of SCEN){ await s(); await sleep(700); }
+  const r = await mjson('/charges');
+  const n = (r.body||[]).length;
+  feed('══ merchant charge log: <b>'+n+' charge'+(n===1?'':'s')+'</b> ══', n===1?'ok':'warn');
+  feed(n===1 ? 'One charge. Everything else never left the agent.' : 'Expected exactly 1 charge — reset and re-run if this looks off.', 'dim');
+  btns.forEach(b=>b.disabled=false);
+}
+
+async function resetDemo(){
+  await gjson('/v1/demo/reset', {method:'POST'});
+  document.getElementById('feed').innerHTML = '<div class="ln dim">— demo reset: spend + decisions cleared, mandates kept —</div>';
+  document.getElementById('verdict-box').style.display='none';
+  document.getElementById('verdict-empty').style.display='block';
+  document.getElementById('f-key').value = newKey();
+  await refreshMandate(); await refreshWire();
+}
+
+document.getElementById('btn-ask').onclick = askGuard;
+document.getElementById('btn-newkey').onclick = ()=>{ document.getElementById('f-key').value = newKey(); };
+document.getElementById('btn-runall').onclick = runAll;
+document.getElementById('btn-reset').onclick = resetDemo;
+document.getElementById('btn-wire').onclick = refreshWire;
+document.querySelectorAll('.scen button[data-s]').forEach(b=>{
+  b.onclick = async ()=>{ b.disabled=true; await SCEN[+b.dataset.s](); b.disabled=false; };
+});
+document.getElementById('f-key').value = newKey();
+health(); refreshMandate(); refreshWire();
+setInterval(health, 10000);
+</script>
+</body>
+</html>
